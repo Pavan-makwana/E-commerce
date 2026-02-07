@@ -7,7 +7,7 @@ import db from "../config/db.js";
 ========================= */
 export const register = async (req, res) => {
   try {
-    const { name, email, password, phone, address } = req.body;
+    const { name, email, password, phone, address, role } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -15,6 +15,11 @@ export const register = async (req, res) => {
         message: "All required fields must be filled"
       });
     }
+
+    // Only allow these roles
+    const userRole = role && ["customer", "seller"].includes(role)
+      ? role
+      : "customer";
 
     // Check if user exists
     const [existing] = await db.promise().query(
@@ -32,17 +37,18 @@ export const register = async (req, res) => {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Insert user (customer by default)
+    // Insert user
     await db.promise().query(
       `INSERT INTO users (name, email, password, role, phone, address)
-       VALUES (?, ?, ?, 'customer', ?, ?)`,
-      [name, email, hashedPassword, phone, address]
+       VALUES (?, ?, ?, ?, ?, ?)`,
+      [name, email, hashedPassword, userRole, phone, address]
     );
 
     res.status(201).json({
       success: true,
       message: "User registered successfully"
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
