@@ -7,8 +7,8 @@ import {
   sellerUpdateOrderStatus
 } from "../controllers/orderController.js";
 
-import { protect } from "../middleware/auth.js";
-import { allowRoles } from "../middleware/role.js";
+import { protect } from "../middlewares/authMiddleware.js";
+import { allowRoles } from "../middlewares/role.js";
 
 const router = express.Router();
 
