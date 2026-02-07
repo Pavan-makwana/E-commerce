@@ -95,9 +95,7 @@ export const placeOrder = async (req, res) => {
   }
 };
 
-/* =========================
-   GET MY ORDERS (Customer)
-========================= */
+/*  GET MY ORDERS (Customer)*/
 export const getMyOrders = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -113,9 +111,7 @@ export const getMyOrders = async (req, res) => {
   }
 };
 
-/* =========================
-   CANCEL ORDER (Customer)
-========================= */
+/* CANCEL ORDER (Customer) */
 export const cancelOrder = async (req, res) => {
   const connection = await db.promise().getConnection();
 

@@ -2,9 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import db from "../config/db.js";
 
-/* =========================
-   REGISTER (Customer)
-========================= */
+/* REGISTER (Customer)*/
 export const register = async (req, res) => {
   try {
     const { name, email, password, phone, address, role } = req.body;
@@ -57,9 +55,7 @@ export const register = async (req, res) => {
   }
 };
 
-/* =========================
-   LOGIN (All Roles)
-========================= */
+/* LOGIN (All Roles)*/
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;

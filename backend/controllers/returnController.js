@@ -78,9 +78,7 @@ export const getSellerReturns = async (req, res) => {
   }
 };
 
-/* =========================
-   SELLER - HANDLE RETURN
-========================= */
+/* SELLER - HANDLE RETURN*/
 export const sellerHandleReturn = async (req, res) => {
   const connection = await db.promise().getConnection();
 
@@ -120,7 +118,7 @@ export const sellerHandleReturn = async (req, res) => {
       [status, id]
     );
 
-    // If approved → refund + restore stock
+    // If approved  refund + restore stock
     if (status === "Approved") {
       const [items] = await connection.query(
         "SELECT product_id, quantity FROM order_items WHERE order_id = ?",
