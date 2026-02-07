@@ -1,18 +1,21 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import { isAdmin } from "../middlewares/roleMiddleware.js";
+import { isAdmin, allowRoles } from "../middlewares/roleMiddleware.js";
 import {
-  getReturns,
-  approveReturn,
-  rejectReturn,
-  refundReturn
+  getAllReturns,
+  getSellerReturns,
+  updateReturnStatus
 } from "../controllers/returnController.js";
 
 const router = express.Router();
 
-router.get("/", protect, isAdmin, getReturns);
-router.put("/:id/approve", protect, isAdmin, approveReturn);
-router.put("/:id/reject", protect, isAdmin, rejectReturn);
-router.put("/:id/refund", protect, isAdmin, refundReturn);
+// Admin sees all
+router.get("/admin", protect, isAdmin, getAllReturns);
+
+// Seller sees theirs
+router.get("/seller", protect, allowRoles("seller"), getSellerReturns);
+
+// Action (Approve/Reject)
+router.put("/:id", protect, allowRoles("admin", "seller"), updateReturnStatus);
 
 export default router;

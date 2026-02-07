@@ -29,6 +29,11 @@ INSERT INTO users (name,email,password,role,phone,address) VALUES
 ('Pavan Makwana','pavan@gmail.com','123456','customer','9333333333','Ahmedabad'),
 ('Rahul Shah','rahul@gmail.com','123456','customer','9444444444','Vadodara'),
 ('Neha Patel','neha@gmail.com','123456','customer','9555555555','Surat');
+UPDATE users
+SET password = '$2b$10$7DKjBxz.DlhuYYgt6DeESes9F4aXHsAdl3yNbYoiA.gLUM9bDoaZG'
+WHERE email = 'admin@shop.com';
+
+
 
 select * from users;
 
@@ -47,14 +52,26 @@ CREATE TABLE products (
     FOREIGN KEY (seller_id) REFERENCES users(id)
 );
 
-INSERT INTO products (seller_id,name,description,price,category,image_url) VALUES
-(2,'HP Laptop','8GB RAM, 512GB SSD',55000,'Electronics','laptop.jpg'),
-(2,'Samsung Mobile','5G Smartphone',25000,'Electronics','mobile.jpg'),
-(3,'Cotton T-Shirt','Premium Cotton',799,'Clothing','tshirt.jpg'),
-(3,'Blue Jeans','Denim Slim Fit',1599,'Clothing','jeans.jpg');
+
+INSERT INTO products (seller_id, name, description, price, category, image_url) VALUES
+(2, 'HP Laptop', '8GB RAM, 512GB SSD, High Performance', 55000, 'Electronics', 'https://images.unsplash.com/photo-1544731612-de7f96afe55f?q=80&w=1000&auto=format&fit=crop'),
+(2, 'Samsung Mobile', '5G Smartphone, 128GB Storage, Awesome Camera', 25000, 'Electronics', 'https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?q=80&w=1000&auto=format&fit=crop'),
+(3, 'Cotton T-Shirt', 'Premium Cotton, Round Neck, White', 799, 'Clothing', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop'),
+(3, 'Blue Jeans', 'Denim Slim Fit, Rugged Look', 1599, 'Clothing', 'https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?q=80&w=1000&auto=format&fit=crop');
 
 select * from products;
 
+-- 1. Remove associated Inventory first
+-- DELETE FROM inventory 
+-- WHERE product_id IN (SELECT id FROM products WHERE seller_id IN (2, 3));
+-- insert into inventory (product_id,stock) values 
+-- (2,25),(3,50);
+-- 2. Remove associated Order Items (Warning: This modifies past order history)
+-- DELETE FROM order_items 
+-- WHERE product_id IN (SELECT id FROM products WHERE seller_id IN (2, 3));
+
+-- 3. Now safely delete the Products
+-- DELETE FROM products WHERE seller_id IN (2, 3);
 
 -- INVENTORY
 CREATE TABLE inventory (
@@ -73,7 +90,16 @@ INSERT INTO inventory (product_id,stock) VALUES
 (3,50),
 (4,35);
 
-select * from inventory;
+-- INSERT INTO inventory (product_id, stock)
+-- SELECT id, 25 FROM products WHERE name = 'HP Laptop'
+-- UNION ALL
+-- SELECT id, 50 FROM products WHERE name = 'Samsung Mobile'
+-- UNION ALL
+-- SELECT id, 100 FROM products WHERE name = 'Cotton T-Shirt'
+-- UNION ALL
+-- SELECT id, 75 FROM products WHERE name = 'Blue Jeans';
+-- SELECT id, name FROM products;
+-- select * from inventory;
 
 
 -- ORDERS

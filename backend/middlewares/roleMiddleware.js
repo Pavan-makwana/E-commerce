@@ -1,13 +1,21 @@
-export const isSeller = (req, res, next) => {
-    if (req.user.role !== "seller") {
-        return res.status(403).json({ message: "Seller access only" });
-    }
-    next();
-};
+// middlewares/roleMiddleware.js
 
 export const isAdmin = (req, res, next) => {
-    if (req.user.role !== "admin") {
-        return res.status(403).json({ message: "Admin access only" });
+  if (req.user && req.user.role === "admin") {
+    next();
+  } else {
+    res.status(403).json({ message: "Admin access required" });
+  }
+};
+
+export const allowRoles = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: "Access denied"
+      });
     }
     next();
+  };
 };
