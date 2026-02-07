@@ -1,20 +1,18 @@
 import express from "express";
+import { protect } from "../middlewares/authMiddleware.js";
+import { isAdmin } from "../middlewares/roleMiddleware.js";
 import {
-  requestReturn,
-  getSellerReturns,
-  sellerHandleReturn
+  getReturns,
+  approveReturn,
+  rejectReturn,
+  refundReturn
 } from "../controllers/returnController.js";
-
-import { protect } from "../middleware/auth.js";
-import { allowRoles } from "../middleware/role.js";
 
 const router = express.Router();
 
-/* Customer */
-router.post("/", protect, allowRoles("customer"), requestReturn);
-
-/* Seller */
-router.get("/seller", protect, allowRoles("seller"), getSellerReturns);
-router.put("/:id", protect, allowRoles("seller"), sellerHandleReturn);
+router.get("/", protect, isAdmin, getReturns);
+router.put("/:id/approve", protect, isAdmin, approveReturn);
+router.put("/:id/reject", protect, isAdmin, rejectReturn);
+router.put("/:id/refund", protect, isAdmin, refundReturn);
 
 export default router;

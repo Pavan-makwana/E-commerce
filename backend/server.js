@@ -10,6 +10,15 @@ import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import returnRoutes from "./routes/returnRoutes.js";
 
+import sellerRoutes from "./routes/sellerRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import returnRoutes from "./routes/returnRoutes.js";
+
+app.use("/api/seller", sellerRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/returns", returnRoutes);
+
+
 const app = express();
 
 app.use(cors());
