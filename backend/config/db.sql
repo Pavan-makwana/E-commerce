@@ -60,6 +60,23 @@ INSERT INTO products (seller_id, name, description, price, category, image_url) 
 (3, 'Blue Jeans', 'Denim Slim Fit, Rugged Look', 1599, 'Clothing', 'https://images.unsplash.com/photo-1542272454315-4c01d7abdf4a?q=80&w=1000&auto=format&fit=crop');
 
 select * from products;
+INSERT INTO products (seller_id, name, description, price, category, image_url) VALUES
+
+--  SELLER 2: ELECTRONICS (5 Products)
+(2, 'Apple MacBook Air M2', '13.6-inch Liquid Retina Display, 8GB RAM, 256GB SSD', 114900, 'Electronics', 'https://www.apple.com/v/macbook-air/specs/a/images/specs/13-inch/mba_13_hero__ft1h6h6uc96y_large_2x.jpg'),
+(2, 'Sony WH-1000XM5', 'Wireless Noise Cancelling Headphones, Black', 24990, 'Electronics', 'https://images.unsplash.com/photo-1618366712010-f4ae9c647dcb?q=80&w=1000&auto=format&fit=crop'),
+(2, 'iPhone 14 Pro', '128GB, Deep Purple, A16 Bionic Chip', 119900, 'Electronics', 'https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17-finish-select-202509-mistblue_GEO_EMEA?wid=5120&hei=2880&fmt=webp&qlt=90&.v=WGdCRlQ0YVlqbTdXTEkxRnVQb0oxcFYyWWhPSUg0YytZdmJ2dmY4d09xcm9ybkE1WmZYZGw4ZVJBQ2FIUWYrLzhLcXQxZ1h0QThIT2dnUm5qbGk5OUJkSERIUjY1Wk1Od3FtNjF6NFZLVXNoQlNzRzdPQUgxWUhsSVV3V0VPSXhDcEN1NkN3RUFyY3dhaDU4aXM3eHp3&traceId=1'),
+(2, 'Canon EOS 1500D', '24.1MP Digital SLR Camera + 18-55mm Lens', 41990, 'Electronics', 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?q=80&w=1000&auto=format&fit=crop'),
+(2, 'Apple Watch Series 8', 'GPS, 45mm Midnight Aluminium Case', 41900, 'Electronics', 'https://images.unsplash.com/photo-1579586337278-3befd40fd17a?q=80&w=1000&auto=format&fit=crop'),
+
+--  SELLER 3: FASHION (5 Products)
+(3, 'Nike Air Jordan 1', 'High Top Sneakers, Red, White & Black', 12995, 'Clothing', 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=1000&auto=format&fit=crop'),
+(3, 'Levis Denim Jacket', 'Classic Trucker Jacket, Blue Denim', 3999, 'Clothing', 'https://images.unsplash.com/photo-1573286596658-507245faf2da?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Ymx1ZSUyMGRlbmltfGVufDB8fDB8fHwy'),
+(3, 'Ray-Ban Aviator', 'Classic Gold Frame, Green G-15 Lens', 6590, 'Fashion', 'https://images.unsplash.com/photo-1572635196237-14b3f281503f?q=80&w=1000&auto=format&fit=crop'),
+(3, 'Adidas Running Shoes', 'Ultraboost Light, Core Black', 8999, 'Clothing', 'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?q=80&w=1000&auto=format&fit=crop'),
+(3, 'PCotton T-Shirt', 'Regular Fit, Round Neck, White', 999, 'Clothing', 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?q=80&w=1000&auto=format&fit=crop');
+
+
 
 -- 1. Remove associated Inventory first
 -- DELETE FROM inventory 
@@ -89,6 +106,15 @@ INSERT INTO inventory (product_id,stock) VALUES
 (2,25),
 (3,50),
 (4,35);
+
+INSERT INTO inventory (product_id, stock)
+SELECT id, 50 
+FROM products
+WHERE id NOT IN (SELECT product_id FROM inventory);
+
+SELECT products.id, products.name, products.price, inventory.stock 
+FROM products 
+JOIN inventory ON products.id = inventory.product_id;
 
 -- INSERT INTO inventory (product_id, stock)
 -- SELECT id, 25 FROM products WHERE name = 'HP Laptop'

@@ -1,47 +1,60 @@
 import db from "../config/db.js";
 
-/* GET ALL ORDERS (Existing) */
+/* 1. GET ALL ORDERS (With full details) */
 export const getAllOrders = async (req, res) => {
-    const [orders] = await db.promise().query(`
-    SELECT o.id, o.status, u.name AS customer
-    FROM orders o
-    JOIN users u ON o.user_id = u.id
-  `);
-    res.json(orders);
-};
-
-/* GET ALL USERS */
-export const getAllUsers = async (req, res) => {
   try {
-    // Select all users but hide passwords
-    const [users] = await db.promise().query(
-      "SELECT id, name, email, role, created_at FROM users"
-    );
-    res.json({ success: true, data: users });
+    const [orders] = await db.promise().query(`
+      SELECT o.id, o.total_amount, o.status, o.created_at, u.name AS customer_name
+      FROM orders o
+      JOIN users u ON o.user_id = u.id
+      ORDER BY o.created_at DESC
+    `);
+    res.json({ success: true, data: orders });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-/*  DELETE USER */
-export const deleteUser = async (req, res) => {
+/* 2. UPDATE ORDER STATUS (Admin Override) */
+export const adminUpdateOrderStatus = async (req, res) => {
   try {
     const { id } = req.params;
-    
-    // Prevent deleting yourself
-    if (req.user.id == id) {
-      return res.status(400).json({ success: false, message: "Cannot delete yourself" });
-    }
+    const { status } = req.body; // 'Shipped', 'Delivered', 'Cancelled'
 
-    await db.promise().query("DELETE FROM users WHERE id = ?", [id]);
-    
-    res.json({ success: true, message: "User deleted successfully" });
+    await db.promise().query("UPDATE orders SET status = ? WHERE id = ?", [status, id]);
+    res.json({ success: true, message: `Order updated to ${status}` });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-/* ADMIN STATS */
+/* 3. GET SALES HISTORY (Who sold what to whom) */
+export const getSalesHistory = async (req, res) => {
+  try {
+    const [sales] = await db.promise().query(`
+      SELECT 
+        oi.id,
+        p.name AS product_name,
+        p.image_url,
+        p.price,
+        oi.quantity,
+        buyer.name AS buyer_name,
+        seller.name AS seller_name,
+        o.created_at
+      FROM order_items oi
+      JOIN orders o ON oi.order_id = o.id
+      JOIN products p ON oi.product_id = p.id
+      JOIN users buyer ON o.user_id = buyer.id
+      JOIN users seller ON p.seller_id = seller.id
+      ORDER BY o.created_at DESC
+    `);
+    res.json({ success: true, data: sales });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+/* 4. EXISTING: GET ADMIN STATS */
 export const getAdminStats = async (req, res) => {
   try {
     const [users] = await db.promise().query("SELECT COUNT(*) as count FROM users");
@@ -56,4 +69,15 @@ export const getAdminStats = async (req, res) => {
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
+};
+
+/* 5. EXISTING: GET USERS & DELETE */
+export const getAllUsers = async (req, res) => {
+    const [users] = await db.promise().query("SELECT id, name, email, role FROM users");
+    res.json({ success: true, data: users });
+};
+
+export const deleteUser = async (req, res) => {
+    await db.promise().query("DELETE FROM users WHERE id = ?", [req.params.id]);
+    res.json({ success: true, message: "User deleted" });
 };
