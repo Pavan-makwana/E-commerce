@@ -21,8 +21,11 @@ import SellerReturns from "./seller/SellerReturns";
 
 // Admin Pages
 import AdminDashboard from "./admin/AdminDashboard";
-import ManageUsers from "./admin/ManageUsers";        // <--- NEW IMPORT
-import GlobalAnalytics from "./admin/GlobalAnalytics"; // <--- NEW IMPORT
+import ManageUsers from "./admin/ManageUsers";
+import GlobalAnalytics from "./admin/GlobalAnalytics";
+import AdminOrders from "./admin/AdminOrders";
+import AdminProducts from "./admin/AdminProducts";
+import AdminReturns from "./admin/AdminReturns.jsx";
 
 function App() {
   return (
@@ -39,67 +42,72 @@ function App() {
 
             {/* Customer Routes */}
             <Route path="/cart" element={
-                <ProtectedRoute role="customer">
-                  <Cart />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="customer">
+                <Cart />
+              </ProtectedRoute>
+            }
             />
             <Route path="/checkout" element={
-                <ProtectedRoute role="customer">
-                  <Checkout />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="customer">
+                <Checkout />
+              </ProtectedRoute>
+            }
             />
             <Route path="/returns" element={
-                <ProtectedRoute role="customer">
-                  <MyReturns />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="customer">
+                <MyReturns />
+              </ProtectedRoute>
+            }
             />
 
             {/* Seller Routes */}
             <Route path="/seller/orders" element={
-                <ProtectedRoute role="seller">
-                  <SellerOrders />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="seller">
+                <SellerOrders />
+              </ProtectedRoute>
+            }
             />
             <Route path="/seller/products" element={
-                <ProtectedRoute role="seller">
-                  <SellerProducts />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="seller">
+                <SellerProducts />
+              </ProtectedRoute>
+            }
             />
             <Route path="/seller/returns" element={
-                <ProtectedRoute role="seller">
-                  <SellerReturns />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="seller">
+                <SellerReturns />
+              </ProtectedRoute>
+            }
             />
 
-            {/* --- ADMIN ROUTES (Fixed) --- */}
+            {/* --- ADMIN ROUTES --- */}
+
             <Route path="/admin" element={
-                <ProtectedRoute role="admin">
-                  <AdminDashboard />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="admin">
+                <AdminDashboard />
+              </ProtectedRoute>
+            }
             />
-            
+
             {/* This was missing! */}
             <Route path="/admin/users" element={
-                <ProtectedRoute role="admin">
-                  <ManageUsers />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="admin">
+                <ManageUsers />
+              </ProtectedRoute>
+            }
             />
-            
+
             {/* This was missing! */}
             <Route path="/admin/analytics" element={
-                <ProtectedRoute role="admin">
-                  <GlobalAnalytics />
-                </ProtectedRoute>
-              } 
+              <ProtectedRoute role="admin">
+                <GlobalAnalytics />
+              </ProtectedRoute>
+            }
             />
+
+            <Route path="/admin/orders" element={<ProtectedRoute role="admin"><AdminOrders /></ProtectedRoute>} />
+            <Route path="/admin/products" element={<ProtectedRoute role="admin"><AdminProducts /></ProtectedRoute>} />
+            <Route path="/admin/returns" element={<ProtectedRoute role="admin"><AdminReturns /></ProtectedRoute>} />
 
           </Routes>
         </div>

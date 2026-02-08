@@ -5,7 +5,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
 
-  // 1. Get the Role from LocalStorage
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
@@ -51,7 +50,7 @@ const Navbar = () => {
         ) : (
           <div className="flex items-center gap-6">
             
-            {/* 🛒 CUSTOMER VIEW */}
+            {/*  CUSTOMER VIEW */}
             {role === "customer" && (
               <>
                 <Link to="/cart" className="hover:text-yellow-400 flex items-center gap-1">
@@ -61,26 +60,33 @@ const Navbar = () => {
               </>
             )}
 
-            {/* 🏪 SELLER VIEW (This was missing!) */}
+            {/*  SELLER VIEW */}
             {role === "seller" && (
               <>
                 <Link to="/seller/products" className="text-orange-400 font-bold hover:text-orange-300">
-                  Inventory (Add Product)
+                  Inventory
                 </Link>
-                <Link to="/seller/orders" className="hover:text-yellow-400">
-                  Store Orders
-                </Link>
-                <Link to="/seller/returns" className="hover:text-yellow-400">
-                  Returns
-                </Link>
+                <Link to="/seller/orders" className="hover:text-yellow-400">Orders</Link>
+                <Link to="/seller/returns" className="hover:text-yellow-400">Returns</Link>
               </>
             )}
 
-            {/* 🛡️ ADMIN VIEW */}
+            {/*  ADMIN VIEW  */}
             {role === "admin" && (
-              <Link to="/admin" className="text-purple-400 font-bold hover:text-purple-300">
-                Dashboard
-              </Link>
+              <>
+                <Link to="/admin" className="text-purple-400 font-bold hover:text-purple-300">
+                  Dashboard
+                </Link>
+                <Link to="/admin/orders" className="hover:text-yellow-400 text-sm">
+                  Orders
+                </Link>
+                <Link to="/admin/products" className="hover:text-yellow-400 text-sm">
+                  Sales
+                </Link>
+                <Link to="/admin/returns" className="hover:text-yellow-400 text-sm">
+                  Returns
+                </Link>
+              </>
             )}
 
             <button onClick={logout} className="text-sm border border-gray-500 px-3 py-1 rounded hover:bg-red-600 hover:border-red-600 transition">

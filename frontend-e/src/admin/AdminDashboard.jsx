@@ -57,11 +57,14 @@ const AdminDashboard = () => {
             </div>
             <span className="text-3xl opacity-50">👥</span>
           </div>
-          <p className="text-sm text-purple-100 mt-4 underline opacity-80">Manage Users & Sellers →</p>
+          <p className="text-sm text-purple-100 mt-4 underline opacity-80">Manage Users →</p>
         </div>
 
         {/* Total Orders */}
-        <div className="bg-gradient-to-r from-orange-600 to-orange-500 text-white p-6 rounded-xl shadow-lg">
+        <div 
+          onClick={() => navigate("/admin/orders")}
+          className="bg-gradient-to-r from-orange-600 to-orange-500 text-white p-6 rounded-xl shadow-lg cursor-pointer transform hover:scale-105 transition duration-300"
+        >
           <div className="flex justify-between items-start">
             <div>
               <p className="text-orange-100 uppercase text-xs font-bold tracking-wider">Total Orders</p>
@@ -69,56 +72,59 @@ const AdminDashboard = () => {
             </div>
             <span className="text-3xl opacity-50">📦</span>
           </div>
-          <p className="text-sm text-orange-100 mt-4 opacity-80">System Wide Orders</p>
+          <p className="text-sm text-orange-100 mt-4 underline opacity-80">Manage Orders →</p>
         </div>
       </div>
 
       {/* 🛠️ Platform Controls Section */}
       <h3 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h3>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        {/* Manage Users Button */}
+        {/* Manage Users */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="bg-blue-100 p-3 rounded-full text-blue-600 text-xl">👤</div>
-            <h4 className="font-bold text-lg">Manage Users</h4>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">👥</span>
+            <h4 className="font-bold text-lg">Users</h4>
           </div>
-          <p className="text-gray-500 text-sm mb-4">View, edit, or ban customers and admins.</p>
-          <button 
-            onClick={() => navigate("/admin/users")}
-            className="w-full bg-blue-600 text-white py-2 rounded font-medium hover:bg-blue-700 transition"
-          >
-            Go to Users
+          <p className="text-gray-500 text-sm mb-4">Manage customers & sellers.</p>
+          <button onClick={() => navigate("/admin/users")} className="w-full bg-blue-50 text-blue-600 py-2 rounded font-medium hover:bg-blue-100">
+            View Users
           </button>
         </div>
 
-        {/* Manage Sellers Button */}
+        {/* Manage Orders */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="bg-orange-100 p-3 rounded-full text-orange-600 text-xl">🏪</div>
-            <h4 className="font-bold text-lg">Manage Sellers</h4>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">📦</span>
+            <h4 className="font-bold text-lg">Orders</h4>
           </div>
-          <p className="text-gray-500 text-sm mb-4">Oversee seller accounts and inventory.</p>
-          <button 
-            onClick={() => navigate("/admin/users")} // Points to users list (sellers are users)
-            className="w-full bg-gray-800 text-white py-2 rounded font-medium hover:bg-black transition"
-          >
-            View Sellers
+          <p className="text-gray-500 text-sm mb-4">Update status & track shipping.</p>
+          <button onClick={() => navigate("/admin/orders")} className="w-full bg-orange-50 text-orange-600 py-2 rounded font-medium hover:bg-orange-100">
+            Track Orders
           </button>
         </div>
 
-        {/* Analytics Button */}
+        {/* Products & Sales */}
         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="bg-green-100 p-3 rounded-full text-green-600 text-xl">📈</div>
-            <h4 className="font-bold text-lg">Platform Analytics</h4>
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">📊</span>
+            <h4 className="font-bold text-lg">Sales & Items</h4>
           </div>
-          <p className="text-gray-500 text-sm mb-4">Deep dive into sales and categories.</p>
-          <button 
-            onClick={() => navigate("/admin/analytics")}
-            className="w-full border border-green-600 text-green-600 py-2 rounded font-medium hover:bg-green-50 transition"
-          >
-            View Charts
+          <p className="text-gray-500 text-sm mb-4">View sales history & inventory.</p>
+          <button onClick={() => navigate("/admin/products")} className="w-full bg-purple-50 text-purple-600 py-2 rounded font-medium hover:bg-purple-100">
+            View Sales
+          </button>
+        </div>
+
+        {/* Returns */}
+        <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition">
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-2xl">↩️</span>
+            <h4 className="font-bold text-lg">Returns</h4>
+          </div>
+          <p className="text-gray-500 text-sm mb-4">Approve or reject refunds.</p>
+          <button onClick={() => navigate("/admin/returns")} className="w-full bg-red-50 text-red-600 py-2 rounded font-medium hover:bg-red-100">
+            Check Returns
           </button>
         </div>
 
