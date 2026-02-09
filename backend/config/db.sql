@@ -152,6 +152,16 @@ INSERT INTO orders (user_id,total_amount,status) VALUES
 (6,799,'Placed'),
 (4,25000,'Cancelled');
 
+ALTER TABLE orders 
+MODIFY COLUMN status ENUM(
+    'Placed', 
+    'Confirmed', 
+    'Shipped', 
+    'Delivered', 
+    'Cancelled', 
+    'Returned', 
+    'Return Requested'
+) DEFAULT 'Placed';
 select * from orders;
 
 
