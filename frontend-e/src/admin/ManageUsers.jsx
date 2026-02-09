@@ -5,7 +5,6 @@ const ManageUsers = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // 1. Define function FIRST
   const fetchUsers = async () => {
     try {
       const res = await API.get("/admin/users");
@@ -17,17 +16,15 @@ const ManageUsers = () => {
     }
   };
 
-  
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, []); 
 
   const deleteUser = async (id) => {
     if (!window.confirm("Are you sure? This cannot be undone.")) return;
 
     try {
       await API.delete(`/admin/users/${id}`);
-      // Optimistic update: remove from UI immediately
       setUsers(users.filter((u) => u.id !== id));
       alert("User removed successfully.");
     } catch (error) {
