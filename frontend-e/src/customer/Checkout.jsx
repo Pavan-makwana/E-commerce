@@ -9,15 +9,27 @@ const Checkout = () => {
   
   const [address, setAddress] = useState("");
   const [pay, setPay] = useState("COD");
+  
+  // State for Card Details
+  const [cardDetails, setCardDetails] = useState({ number: "", cvv: "" });
+  
   const [loading, setLoading] = useState(false);
 
   const totalPrice = cart.reduce((acc, item) => acc + item.price * item.qty, 0);
 
   const submit = async () => {
+    // 1. Basic Validation
     if(!address) {
         alert("Please enter a shipping address.");
         return;
     }
+
+    // 2. Card Validation (Only if Card is selected)
+    if (pay === "CARD" && (!cardDetails.number || !cardDetails.cvv)) {
+        alert("Please enter valid Card Number and CVV.");
+        return;
+    }
+
     setLoading(true);
 
     try {
@@ -28,14 +40,16 @@ const Checkout = () => {
 
         await API.post("/orders", {
             items,
-            payment_method: pay
+            payment_method: pay,
+            // Send card details only if Card is selected (Mock logic for now)
+            payment_details: pay === "CARD" ? cardDetails : null 
         });
 
         localStorage.removeItem("cart");
         alert("Order Placed Successfully! 🎉");
         navigate("/");
     } catch (err) {
-        alert("Order failed: " + err.message);
+        alert("Order failed: " + (err.response?.data?.message || err.message));
     } finally {
         setLoading(false);
     }
@@ -49,10 +63,10 @@ const Checkout = () => {
         
         {/* Left: Forms */}
         <div className="flex-1 bg-white p-6 md:p-8 rounded-xl shadow-sm border border-gray-200">
+            {/* Address Section */}
             <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-gray-800">
                <MapPin className="text-blue-600" size={20} /> Shipping Information
             </h3>
-            
             <div className="mb-8">
                 <label className="block text-gray-700 text-sm font-medium mb-2">Delivery Address</label>
                 <textarea
@@ -62,24 +76,65 @@ const Checkout = () => {
                 />
             </div>
 
+            {/* Payment Section */}
             <h3 className="font-semibold text-lg mb-4 flex items-center gap-2 text-gray-800">
                <CreditCard className="text-blue-600" size={20} /> Payment Method
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <div 
-                    onClick={() => setPay("COD")}
-                    className={`p-4 border-2 rounded-xl cursor-pointer flex items-center gap-3 transition ${pay === 'COD' ? 'border-blue-500 bg-blue-50' : 'border-gray-100 hover:border-gray-200'}`}
-                >
-                    <input type="radio" checked={pay === "COD"} readOnly className="w-4 h-4 text-blue-600" /> 
-                    <span className="font-medium">Cash on Delivery</span>
+            
+            <div className="space-y-4 mb-8">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    {/* COD Option */}
+                    <div 
+                        onClick={() => setPay("COD")}
+                        className={`p-4 border-2 rounded-xl cursor-pointer flex flex-col items-center justify-center gap-2 transition ${pay === 'COD' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-100 hover:border-gray-200'}`}
+                    >
+                        <span className="font-bold">Cash on Delivery</span>
+                    </div>
+
+                    {/* UPI Option */}
+                    <div 
+                        onClick={() => setPay("UPI")}
+                        className={`p-4 border-2 rounded-xl cursor-pointer flex flex-col items-center justify-center gap-2 transition ${pay === 'UPI' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-100 hover:border-gray-200'}`}
+                    >
+                        <span className="font-bold">UPI / Online</span>
+                    </div>
+
+                    {/* Card Option */}
+                    <div 
+                        onClick={() => setPay("CARD")}
+                        className={`p-4 border-2 rounded-xl cursor-pointer flex flex-col items-center justify-center gap-2 transition ${pay === 'CARD' ? 'border-blue-500 bg-blue-50 text-blue-700' : 'border-gray-100 hover:border-gray-200'}`}
+                    >
+                        <span className="font-bold">Credit/Debit Card</span>
+                    </div>
                 </div>
-                <div 
-                    onClick={() => setPay("UPI")}
-                    className={`p-4 border-2 rounded-xl cursor-pointer flex items-center gap-3 transition ${pay === 'UPI' ? 'border-blue-500 bg-blue-50' : 'border-gray-100 hover:border-gray-200'}`}
-                >
-                    <input type="radio" checked={pay === "UPI"} readOnly className="w-4 h-4 text-blue-600" /> 
-                    <span className="font-medium">UPI / Online</span>
-                </div>
+
+                {/* if CARD is selected */}
+                {pay === "CARD" && (
+                    <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 animate-fade-in mt-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div className="sm:col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Card Number</label>
+                                <input 
+                                    type="text" 
+                                    maxLength="16"
+                                    placeholder="XXXX XXXX XXXX XXXX" 
+                                    className="w-full p-2 border border-gray-300 rounded focus:border-blue-500 outline-none"
+                                    onChange={(e) => setCardDetails({ ...cardDetails, number: e.target.value })}
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">CVV</label>
+                                <input 
+                                    type="password" 
+                                    maxLength="3"
+                                    placeholder="123" 
+                                    className="w-full p-2 border border-gray-300 rounded focus:border-blue-500 outline-none"
+                                    onChange={(e) => setCardDetails({ ...cardDetails, cvv: e.target.value })}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <button
@@ -91,7 +146,7 @@ const Checkout = () => {
             </button>
         </div>
 
-        {/* Right: Summary */}
+        {/* Right: Order Summary */}
         <div className="w-full lg:w-96 h-fit bg-gray-50 p-6 rounded-xl border border-gray-200">
             <h3 className="font-bold text-gray-800 mb-4 border-b pb-2 flex items-center gap-2">
                 <ShoppingBag size={18} /> In Your Bag
